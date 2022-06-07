@@ -1,13 +1,10 @@
-#include <string.h>
-#include <math.h>
-#include "fileSystem.h"
 #include "decrypters.h"
-#include "helpers.h"
 
-void CaeserCipherDecryption(char* fileName, int size){
+void CaeserCipherDecryption(const char* fileName, const int size, const char* key){
     FILE *inputFile, *outputFile;
     char ch;
     char fileOutputName[size];
+    int k = atoi(key);
     inputFile = FileReader(fileName, "r");
     strcpy(fileOutputName, fileName);
     fileOutputName[strlen(fileOutputName) - 3] = '\0';
@@ -26,7 +23,7 @@ void CaeserCipherDecryption(char* fileName, int size){
       // else if(ch - 3 < 'A')
       //   fputc((ch - 3) + 26, outputFile);
       else
-        fputc(ch - 3, outputFile);
+        fputc(ch - k, outputFile);
     
   } while (ch != EOF);
 
@@ -55,9 +52,6 @@ void TranspositionCipherDecryption(char*fileName, int fileSize, char*  encryptKe
   while(fgets(chunk, 128, inputFile) != NULL) {
     tempSize = strlen(chunk);
     originalTextSize += tempSize;
-    // printf("%d\n", tempSize);
-    // printf("chunk: %s\n", chunk);
-    // strcat(plaintText, chunk);
     memcpy(plaintText + (originalTextSize - tempSize), chunk, tempSize);
   }
   nrows = ceil((float)originalTextSize/keySize);
@@ -66,20 +60,14 @@ void TranspositionCipherDecryption(char*fileName, int fileSize, char*  encryptKe
 
   for(int i = nrows; i >= 1; i--)
     for(int j = 0; j < keySize; j++){
-      // printf("i: %d\nj: %d\n", i, j);
         ch = plaintText[TranslatedKey[j] * nrows - i];
-        // printf("%c", ch);
         if(ch != -1 && ch)
           if(ch == '?')
             continue;
-          else if(ch == '\r'){
+          else if(ch == '\r')
             fputc('\n', outputFile);
-            printf("\n");
-          }
-          else {
+          else
             fputc(ch, outputFile);
-            printf("%c", ch);
-          }
     }
   
   free(plaintText);

@@ -10,26 +10,26 @@
 //mode is for encryption or decryption, nalgo speceifies the used algo in theses modes
 
 
-void callEncryptionAlgos(char* targetPath, int size, int algo, char* keyText, int transKeySize){
+void callEncryptionAlgos(char* targetPath, int size, int algo, char* key, int KeySize){
     switch (algo)
     {
     case 1:
-        CaeserCipherEncryption(targetPath, size);
+        CaeserCipherEncryption(targetPath, size, key);
         break;
     case 2:
-        TranspositionCipherEncryption(targetPath, size, keyText, transKeySize);
+        TranspositionCipherEncryption(targetPath, size, key, KeySize);
         break;
     }
 }
 
-void callDecryptionAlgos(char* targetPath, int size, int algo, char* keyText, int transKeySize){
+void callDecryptionAlgos(char* targetPath, int size, int algo, char* key, int KeySize){
     switch (algo)
     {
     case 1:
-        CaeserCipherDecryption(targetPath, size);
+        CaeserCipherDecryption(targetPath, size, key);
         break;
     case 2: 
-        TranspositionCipherDecryption(targetPath, size, keyText, transKeySize);
+        TranspositionCipherDecryption(targetPath, size, key, KeySize);
         break;
     }
 }
@@ -42,15 +42,15 @@ void modeRouter(char* targetPath, int size, int mode, int algo, char* transKey, 
 }
 
 
-void mainRouter(char* targetPath, int size, int targetType, int mode, int algo, char* transKey, int transKeySize){
+void mainRouter(char* targetPath, int size, int targetType, int mode, int algo, char* key, int KeySize){
     int dirFileNum;
     if(!targetType)
-        modeRouter(targetPath, size, mode, algo, transKey, transKeySize);
+        modeRouter(targetPath, size, mode, algo, key, KeySize);
     else{
         struct dirent **dir = GetAllFilesInDir(targetPath, mode? "txt": "enc", &dirFileNum);
         if(dirFileNum)
             for (int i = 0 ; i < dirFileNum; i++)
-                modeRouter(dir[i]->d_name, size, mode, algo, transKey, transKeySize);
+                modeRouter(dir[i]->d_name, size, mode, algo, key, KeySize);
         else{
             printf("[!] no files to %s\n", mode? "encrypt": "decrypt");
             free(dir);

@@ -1,12 +1,7 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <dirent.h>
 #include "argParser.h"
-#include "mssgs.h"
 
 char* FILE_NAME;
+
 
 void printUsage(){
     fprintf(stderr, USAGE, FILE_NAME);
@@ -18,7 +13,7 @@ void printManual(){
 }
 
 
-void flagChecker(int encF, int decF, int dirF, int fileF, int keyF, int encryptAlgo){
+void flagChecker(const int encF, const int decF, const int dirF, const int fileF, const int keyF, const int encryptAlgo, char* key){
     int flag = 0;
     if(encF && decF){ //can't encrypt and decrypt at the same time
         fprintf(stderr, TWO_MODES_ERR);
@@ -34,10 +29,20 @@ void flagChecker(int encF, int decF, int dirF, int fileF, int keyF, int encryptA
         flag = 1;
     }
 
-    if(encryptAlgo == 2 && !keyF){ //if the algo is transposition Cipher and the key is not gived{
-        fprintf(stderr, MISSING_KEY_TRANSPOSITION_ALGO);
+    if(!keyF){ //if key is not given
+        fprintf(stderr, MISSING_KEY);
         flag = 1;
     }
+
+    if(encryptAlgo == 1 && !IsAllDigits(key)){ //if key is gived and the algo was cesar but the user put a char that wasn't a digit
+        fprintf(stderr, INCOMPATIBLE_KEY_CEASER);
+        flag = 1;
+    } 
+
+     if(encryptAlgo == 2 && !IsAllChars(key)){ //if key is gived and the algo was cesar but the user put a char that wasn't a digit
+        fprintf(stderr, INCOMPATIBLE_KEY_TRANSPOSITION);
+        flag = 1;
+    } 
     
     if(dirF && fileF){ // can't target a directory and a single file at the same time
         fprintf(stderr, DIR_FILE_ARGS);
@@ -68,8 +73,9 @@ void argHandler(int argc, char** argv, char** Target, int* size, int* targetType
                 break;
             case 'c': //keyCode for trans algo
                 keyF = 1;
-                strcpy(optarg, strdup(optarg)); //making the string upper case
+                // strcpy(optarg, strdup(optarg)); //making the string upper case
                 *keySize = strlen(optarg);
+                StringToUpper(optarg, *keySize);
                 *keyText = (char*)malloc(*size * sizeof(char));
                 strcpy(*keyText, optarg);
                 break;
@@ -104,5 +110,5 @@ void argHandler(int argc, char** argv, char** Target, int* size, int* targetType
                 exit(EXIT_FAILURE);
         }
 
-        flagChecker(encF, decF, dirF, fileF, keyF, encryptAlgo);
+        flagChecker(encF, decF, dirF, fileF, keyF, encryptAlgo, *keyText);
 }

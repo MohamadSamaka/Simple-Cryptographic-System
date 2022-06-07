@@ -1,7 +1,9 @@
 #ifndef DECRYPTERS_H
 #define DECRYPTERS_H
-void CaeserCipherDecryption(char*, int);
+#include <string.h>
+#include <math.h>
+#include "fileSystem.h"
+#include "helpers.h"
+void CaeserCipherDecryption(const char*, const int, const char*);
 void TranspositionCipherDecryption(char*fileName, int fileSize, char*  encryptKey, const int keySize);
-void CopyTranslateKey(char* encryptKey, const int size, int* trannslatedKey);
-
 #endif

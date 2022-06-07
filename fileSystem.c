@@ -1,8 +1,3 @@
-#include<stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <string.h>
 #include "fileSystem.h"
 
 FILE* FileReader(const char* fileName, const char* mode){

@@ -1,5 +1,9 @@
 #ifndef HELPERS_H
 #define HELPERS_H
-void TranslateKey(char*, const int, int*);
-void OrganizeKey(int*,int);
+#include <ctype.h>
+void TranslateKey(const char*, const int, int*);
+void OrganizeKey(int*,const int);
+void StringToUpper(char*, const int);
+int IsAllDigits(const char*);
+int IsAllChars(const char*);
 #endif

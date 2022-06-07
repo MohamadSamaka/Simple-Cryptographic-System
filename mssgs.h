@@ -2,7 +2,9 @@
 #define MESSAGES_H
 
 #define MISSING_ENCRYPTON_TYPE "[-] you didn't specify the algorithm of encryption\n"
-#define MISSING_KEY_TRANSPOSITION_ALGO "[-] key is required for the transposition Cipher algorithm\n"
+#define MISSING_KEY "[-] key is missing\n"
+#define INCOMPATIBLE_KEY_CEASER "[-] the key must contain digits only for ceasar algo\n"
+#define INCOMPATIBLE_KEY_TRANSPOSITION "[-] the key must contain only alphabetic characters\n"
 #define MISSING_MODE "[-] you didn't specify if you want to encrypt or decrypt\n"
 #define TWO_MODES_ERR "[-] you can't encrypt and decrypt at thre same time!\n"
 #define DIR_FILE_ARGS "[-] a diretory and a single file was given, you muse give either a directory or a single file\n"

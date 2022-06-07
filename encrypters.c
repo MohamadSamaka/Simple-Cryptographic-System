@@ -1,32 +1,29 @@
-#include <string.h>
-#include <math.h>
-#include "fileSystem.h"
 #include "encrypters.h"
-#include "helpers.h"
 
-void CaeserCipherEncryption(char* fileName, int size){
-    FILE *inputFile, *outputFile;
-    char ch;
-    char fileOutputName[size];
-    inputFile = FileReader(fileName, "r");
-    strcpy(fileOutputName, fileName);
-    fileOutputName[strlen(fileOutputName) - 3] = '\0';
-    strcat(fileOutputName, "enc");
-    outputFile = FileReader(fileOutputName, "w");
+void CaeserCipherEncryption(const char* fileName, const int size, const char* key){
+  FILE *inputFile, *outputFile;
+  char ch;
+  char fileOutputName[size];
+  int k = atoi(key);
+  inputFile = FileReader(fileName, "r");
+  strcpy(fileOutputName, fileName);
+  fileOutputName[strlen(fileOutputName) - 3] = '\0';
+  strcat(fileOutputName, "enc");
+  outputFile = FileReader(fileOutputName, "w");
 
-    do{
-      ch = fgetc(inputFile);
-      if(ch != -1)
-        if(ch == '?')
-          continue;
-        // else if(ch + 3 > 'Z')
-        //   fputc((ch + 3) - 26, outputFile);
-        // else if(ch == ' ')
-        //   fputc(' ', outputFile);
-        else
-          fputc(ch + 3, outputFile);
+  do{
+    ch = fgetc(inputFile);
+    if(ch != -1)
+      if(ch == '?')
+        continue;
+      // else if(ch + 3 > 'Z')
+      //   fputc((ch + 3) - 26, outputFile);
+      // else if(ch == ' ')
+      //   fputc(' ', outputFile);
+      else
+        fputc(ch + k, outputFile);
 
-    } while (ch != EOF);
+  } while (ch != EOF);
     
 
     fclose(inputFile);
